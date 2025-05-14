@@ -1,21 +1,22 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../db');
+const mysql = require('mysql2');
 
-// GET: listar usuarios
-router.get('/', (req, res) => {
-  db.query('SELECT * FROM usuarios', (err, results) => {
-    if (err) return res.status(500).json({ error: err.message });
-    res.json(results);
-  });
+// Conexión a la base de datos
+const connection = mysql.createConnection({
+  host: 'localhost',
+  user: 'root',
+  password: 'Infantes2124',
+  database: 'AM_Multi'
 });
 
-// POST: crear usuario
-router.post('/', (req, res) => {
-  const { nombre, contrasena } = req.body;
-  db.query('INSERT INTO usuarios (nombre, correo) VALUES (?, ?)', [nombre, contrasena], (err, result) => {
-    if (err) return res.status(500).json({ error: err.message });
-    res.json({ id: result.insertId, nombre, contrasena });
+// Ruta para obtener todos los usuarios
+router.get('/', (req, res) => {
+  connection.query('SELECT * FROM usuarios', (err, results) => {
+    if (err) {
+      return res.status(500).send(err);
+    }
+    res.json(results);
   });
 });
 
