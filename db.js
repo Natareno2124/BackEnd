@@ -59,6 +59,10 @@ app.use("/proveedores", proveedoresRoutes);
 const categoriasRoutes = require("./categoria.routes");
 app.use("/categorias", categoriasRoutes);
 
+const productoRoutes = require("./producto.routes");
+app.use("/productos", productoRoutes);
+
+
 // ✅ Iniciar el servidor
 app.listen(3000, () => {
   console.log("Servidor backend en puerto 3000");
