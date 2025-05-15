@@ -1,15 +1,12 @@
 const express = require('express');
-const cors = require('cors');
-const bodyParser = require('body-parser');
 const mysql = require('mysql2');
+const cors = require('cors');
 
 const app = express();
-const PORT = 3000;
-
 app.use(cors());
-app.use(bodyParser.json());
+app.use(express.json());
 
-// Configura la conexión a la base de datos
+// ✅ Crea la conexión con el nombre correcto
 const connection = mysql.createConnection({
   host: 'localhost',
   user: 'root',
@@ -17,31 +14,38 @@ const connection = mysql.createConnection({
   database: 'AM_Multi'
 });
 
-// Conectar a la base de datos
-connection.connect((err) => {
+// ✅ Usa ese mismo nombre para conectar
+connection.connect(err => {
   if (err) {
-    console.error('Error de conexión a la base de datos:', err);
+    console.error('Error de conexión:', err);
     return;
   }
-  console.log('Conectado a la base de datos');
+  console.log('Conectado a MySQL');
 });
 
-// Ruta de login
+// ✅ Ruta de prueba
+app.get('/usuarios', (req, res) => {
+  connection.query('SELECT * FROM usuarios', (err, results) => {
+    if (err) return res.status(500).send(err);
+    res.json(results);
+  });
+});
+
 app.post('/login', (req, res) => {
-  const { usuario, contrasena } = req.body;
+  console.log('Datos recibidos:', req.body);
+  const { nombre, contrasena } = req.body;
 
   const query = 'SELECT * FROM usuarios WHERE nombre = ? AND contrasena = ?';
-  connection.query(query, [usuario, contrasena], (err, results) => {
+  connection.query(query, [nombre, contrasena], (err, results) => {
     if (err) {
-      console.error('Error en la consulta:', err);
       return res.status(500).json({ error: 'Error en el servidor' });
-    }
+    } 
 
     if (results.length > 0) {
-      res.json({ accesoPermitido: true });
-    } else {
-      res.status(401).json({ accesoPermitido: false });
-    }
+  res.json({ accesoPermitido: true });
+} else {
+  res.status(401).json({ accesoPermitido: false });
+}
   });
 });
 
@@ -51,7 +55,13 @@ app.use('/clientes', clientesRoutes);
 const proveedoresRoutes = require('./proveedores.routes');
 app.use('/proveedores', proveedoresRoutes);
 
-// Iniciar servidor
-app.listen(PORT, () => {
-  console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
+const productosRoutes = require('./productos.routes');
+app.use('/productos', productosRoutes);
+
+const productosRoutes = require('./dashboard.routes');
+app.use('/dashboard', productosRoutes);
+
+// ✅ Iniciar el servidor
+app.listen(3000, () => {
+  console.log('Servidor backend en puerto 3000');
 });

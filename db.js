@@ -55,6 +55,9 @@ app.use('/clientes', clientesRoutes);
 const proveedoresRoutes = require('./proveedores.routes');
 app.use('/proveedores', proveedoresRoutes);
 
+const productosRoutes = require('./productos.routes');
+app.use('/productos', productosRoutes);
+
 
 // ✅ Iniciar el servidor
 app.listen(3000, () => {
