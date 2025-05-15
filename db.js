@@ -10,7 +10,7 @@ app.use(express.json());
 const connection = mysql.createConnection({
   host: 'localhost',
   user: 'root',
-  password: 'Infantes2124',
+  password: '1234',
   database: 'AM_Multi'
 });
 
@@ -39,7 +39,7 @@ app.post('/login', (req, res) => {
   connection.query(query, [nombre, contrasena], (err, results) => {
     if (err) {
       return res.status(500).json({ error: 'Error en el servidor' });
-    }
+    } 
 
     if (results.length > 0) {
   res.json({ accesoPermitido: true });
@@ -48,6 +48,12 @@ app.post('/login', (req, res) => {
 }
   });
 });
+
+const clientesRoutes = require('./clientes.routes');
+app.use('/clientes', clientesRoutes);
+
+const proveedoresRoutes = require('./proveedores.routes');
+app.use('/proveedores', proveedoresRoutes);
 
 
 // ✅ Iniciar el servidor

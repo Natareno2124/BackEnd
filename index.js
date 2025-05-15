@@ -13,7 +13,7 @@ app.use(bodyParser.json());
 const connection = mysql.createConnection({
   host: 'localhost',
   user: 'root',
-  password: 'Infantes2124',
+  password: '1234',
   database: 'AM_Multi'
 });
 
@@ -44,6 +44,12 @@ app.post('/login', (req, res) => {
     }
   });
 });
+
+const clientesRoutes = require('./clientes.routes');
+app.use('/clientes', clientesRoutes);
+
+const proveedoresRoutes = require('./proveedores.routes');
+app.use('/proveedores', proveedoresRoutes);
 
 // Iniciar servidor
 app.listen(PORT, () => {
